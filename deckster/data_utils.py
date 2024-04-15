@@ -1,74 +1,61 @@
 # data_utils.py
 
-import csv
+import json
 from typing import List, Dict, Any
 
 
-def read_csv_data(file_path: str) -> List[Dict[str, str]]:
+def read_json_data(file_path: str) -> Dict[str, Any]:
     """
-    Reads data from a CSV file and returns it as a list of dictionaries.
+    Reads data from a JSON file and returns it as a dictionary.
 
     Args:
-        file_path: The path to the CSV file.
+        file_path: The path to the JSON file.
 
     Returns:
-        A list of dictionaries representing the data from the CSV file.
+        A dictionary representing the data from the JSON file.
     """
-    data = []
     with open(file_path, "r") as file:
-        reader = csv.DictReader(file)
-        for row in reader:
-            data.append(row)
+        data = json.load(file)
     return data
 
 
-def transform_data(data: List[Dict[str, str]]) -> List[Dict[str, str]]:
+def transform_data(data: Dict[str, Any]) -> Dict[str, Any]:
     """
     Transforms the data into the required format for the PowerPoint presentation.
 
     Args:
-        data: The input data as a list of dictionaries.
+        data: The input data as a dictionary.
 
     Returns:
-        The transformed data as a list of dictionaries.
+        The transformed data as a dictionary.
     """
-    transformed_data = []
-    for item in data:
-        transformed_item = {
-            "title": item["Title"],
-            "date": item["Date"],
-            "estimated": item["Estimated"],
-            "delivered": item["Delivered"],
-        }
-        transformed_data.append(transformed_item)
+    transformed_data = {
+        "Page Title": f"{data['campaigns'][0]['brand']} {data['campaigns'][0]['retailer']} Campaign",
+        "Recommendation": data["recommendations"],
+        "Results and Learnings": data["learnings"],
+        "Tactics": [
+            {
+                "title": tactic["name"],
+                "date": f"{tactic['start_date']} - {tactic['end_date']}",
+                "estimated": ", ".join(tactic["estimated_results"]),
+                "delivered": ", ".join(tactic["actual_results"]),
+            }
+            for tactic in data["tactics"]
+        ],
+    }
     return transformed_data
 
 
 def get_presentation_data(file_path: str) -> Dict[str, Any]:
     """
-    Retrieves the data for the PowerPoint presentation from a CSV file.
+    Retrieves the data for the PowerPoint presentation from a JSON file.
 
     Args:
-        file_path: The path to the CSV file containing the presentation data.
+        file_path: The path to the JSON file containing the presentation data.
 
     Returns:
         A dictionary containing the presentation data.
     """
-    csv_data = read_csv_data(file_path)
-    tactics = transform_data(csv_data)
-    presentation_data = {
-        "Page Title": "Your Page Title Here",
-        "Recommendation": [
-            "- Recommendation 1",
-            "- Recommendation 2",
-            "- Recommendation 3",
-        ],
-        "Results and Learnings": [
-            "- Result 1",
-            "- Learning 1",
-            "- Result 2",
-            "- Learning 2",
-        ],
-        "Tactics": tactics,
-    }
+    json_data = read_json_data(file_path)
+    presentation_data = transform_data(json_data)
     return presentation_data

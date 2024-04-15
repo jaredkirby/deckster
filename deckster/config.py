@@ -5,7 +5,7 @@ from pptx.dml.color import RGBColor
 
 # File paths
 PPT_TEMPLATE_PATH = "CPGenius/GenerateReport/AJI-Report-Template.pptx"
-DATA_FILE_PATH = "data.csv"
+DATA_FILE_PATH = "data.json"
 LOG_FILE_PATH = "app.log"
 
 # Table configuration

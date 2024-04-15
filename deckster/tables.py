@@ -72,9 +72,9 @@ class FormattedTable:
 
     def populate_table(self, data: List[Dict[str, str]]) -> None:
         """
-        Populates the table with the provided data and applies cell formatting.
+        Populates the table with the specified data.
         """
         for col_idx, item in enumerate(data):
             for row_idx, (key, value) in enumerate(item.items()):
                 cell = self.table.cell(row_idx, col_idx)
-                self._format_cell(cell, value, key)
+                self.format_cell(cell, value, key)

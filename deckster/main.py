@@ -27,7 +27,7 @@ def generate_presentation():
         # Load the PowerPoint template
         prs = Presentation(PPT_TEMPLATE_PATH)
 
-        # Get the presentation data from the CSV file
+        # Get the presentation data from the JSON file
         presentation_data = get_presentation_data(DATA_FILE_PATH)
 
         # Add content to the slides
