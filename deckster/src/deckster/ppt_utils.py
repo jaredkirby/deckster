@@ -1,10 +1,14 @@
 # ppt_utils.py
-
+from typing import List
 from pptx.util import Pt
 from pptx.dml.color import RGBColor
+from pptx.shapes.base import BaseShape
+from pptx.text.text import TextFrame, _Run, _Paragraph
 
 
-def configure_text_run(run, font_size, bold, color, font_name="Calibri"):
+def configure_text_run(
+    run: _Run, font_size: int, bold: bool, color: RGBColor, font_name: str = "Calibri"
+) -> None:
     """
     Configures the properties of a text run.
 
@@ -21,7 +25,13 @@ def configure_text_run(run, font_size, bold, color, font_name="Calibri"):
     run.font.name = font_name
 
 
-def add_text_to_shape(shape, text, font_size=18, bold=False, color=RGBColor(0, 0, 0)):
+def add_text_to_shape(
+    shape: BaseShape,
+    text: str,
+    font_size: int = 18,
+    bold: bool = False,
+    color: RGBColor = RGBColor(0, 0, 0),
+) -> None:
     """
     Adds or updates text in a shape with specified font properties.
 
@@ -35,13 +45,18 @@ def add_text_to_shape(shape, text, font_size=18, bold=False, color=RGBColor(0, 0
     text_frame = shape.text_frame
     paragraph = text_frame.paragraphs[0]
     paragraph.text = text
-
     # Apply formatting to the first run in the paragraph
     run = paragraph.runs[0]
     configure_text_run(run, font_size, bold, color)
 
 
-def add_bulleted_list(shape, items, font_size=18, bold=False, color=RGBColor(0, 0, 0)):
+def add_bulleted_list(
+    shape: BaseShape,
+    items: List[str],
+    font_size: int = 18,
+    bold: bool = False,
+    color: RGBColor = RGBColor(0, 0, 0),
+) -> None:
     """
     Converts the content of a shape into a bulleted list with specified font properties.
 
@@ -54,12 +69,10 @@ def add_bulleted_list(shape, items, font_size=18, bold=False, color=RGBColor(0, 
     """
     text_frame = shape.text_frame
     text_frame.clear()  # Clear existing text to start fresh with bullet points
-
     for item in items:
         paragraph = text_frame.add_paragraph()
         paragraph.text = item
         paragraph.level = 0  # Set bullet level (0 for top-level bullets)
-
         # Apply formatting to the first run in the paragraph
         run = paragraph.runs[0]
         configure_text_run(run, font_size, bold, color)
